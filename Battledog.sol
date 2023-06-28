@@ -18,10 +18,10 @@ interface Iburn {
 }
 
 contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {        
-        constructor(string memory _name, string memory _symbol, address aiGameAddress, address _newGuard) 
+        constructor(string memory _name, string memory _symbol, address gameAddress, address _newGuard) 
             ERC721(_name, _symbol)
         {
-            aigame = aiGameAddress;
+            game = gameAddress;
             guard = _newGuard;
         }
     using Math for uint256;
@@ -36,12 +36,12 @@ contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {
     uint256 public activatingAmount = 20000000 * 10**6;
     uint256 private divisor = 1 * 10**6;
     uint256 public TotalContractTransfers = 0;
-    uint256 public TotalAigameBurns = 0;    
+    uint256 public TotalGAMEBurns = 0;    
     uint256 BattlesTotal = 0; 
     using Strings for uint256;
     string public baseURI;
     address private guard; 
-    address public aigame;
+    address public game;
     string public Author = "0xSorcerer | Battousai Nakamoto | Dark-Viper";
     bool public paused = false;        
     address public immutable deadAddress = 0x000000000000000000000000000000000000dEaD;  
@@ -52,7 +52,7 @@ contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {
     }
 
     modifier onlyBurner() {
-        require(msg.sender == aigame, "Not authorized.");
+        require(msg.sender == game, "Not authorized.");
         _;
     }
 
@@ -135,9 +135,9 @@ contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {
         charge = _charge;
     }
 
-    function setaAigameAddress (address _aigameAddress) external onlyOwner {
+    function setaGAMEAddress (address _gameAddress) external onlyOwner {
         require(msg.sender == owner(), "Not Owner.");
-        aigame = _aigameAddress;
+        game = _gameAddress;
     }
 
     function updateMintFee(uint256 _mintFee) external onlyOwner() {
@@ -178,14 +178,14 @@ contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {
         TotalContractTransfers += burnAmount;       
     }
 
-    function burnAiGame(uint256 _burnAmount) internal {
+    function burnGAME(uint256 _burnAmount) internal {
         TokenInfo storage tokens = AllowedCrypto[_pay];
         IERC20 paytoken;
         paytoken = tokens.paytoken;
         paytoken.transferFrom(msg.sender, address(this), _burnAmount);
-        // Call the Burn function from the AiGame contract
-        Iburn(aigame).Burn(_burnAmount);
-        TotalAigameBurns += _burnAmount;       
+        // Call the Burn function from the GAME contract
+        Iburn(game).Burn(_burnAmount);
+        TotalGAMEBurns += _burnAmount;       
     }
     
     function transferTokens(uint256 _cost) internal {
@@ -388,9 +388,9 @@ contract battledog is ERC721Enumerable, Ownable, ReentrancyGuard {
         require(msg.sender == ownerOf(_playerId), "Not Your NFT");
         require(_playerId > 0 && _playerId <= totalSupply(), "Not Found");
         require(players[_playerId].wins >= 5, "Insufficient wins");
-        //Charge cost in AiGame
+        //Charge cost in GAME
         uint256 cost = (players[_playerId].level + 1) * charge;
-        burnAiGame(cost);
+        burnGAME(cost);
         // Update the player's level and wins
         players[_playerId].level++;
         uint256 currentLevel = players[_playerId].level;
