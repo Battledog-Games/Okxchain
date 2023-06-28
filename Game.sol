@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// @title AiGAME token for Battledog Games
+// @title AiGAME token for battledogs Arena
 // https://twitter.com/0xSorcerers | https://github.com/Dark-Viper | https://t.me/Oxsorcerer | https://t.me/battousainakamoto | https://t.me/darcViper
 
 pragma solidity ^0.8.17;
@@ -9,7 +9,7 @@ import "abdk-libraries-solidity/ABDKMath64x64.sol";
 import "./ERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract AIGAME is ERC20, Ownable, ReentrancyGuard {        
+contract GAME is ERC20, Ownable, ReentrancyGuard {        
         constructor(string memory _name, string memory _symbol, address _newGuard, address _devWallet, address _lpWallet, address _deadWallet) 
             ERC20(_name, _symbol)
         {
@@ -27,7 +27,7 @@ contract AIGAME is ERC20, Ownable, ReentrancyGuard {
     
     bool public paused = false;
     address private guard;
-    uint256 public MAX_SUPPLY = 690000000000000 * 10 ** decimals();
+    uint256 public MAX_SUPPLY = 5000000000 * 10 ** decimals();
     uint256 public TotalBurns;
 
     modifier onlyGuard() {
